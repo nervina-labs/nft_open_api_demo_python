@@ -37,7 +37,6 @@ def distribute_token(key, secret, uuid, *address):
     content = {
         'addresses': list(address)
     }
-    print(content)
     return send_request(key, secret, method, endpoint, json.dumps(content))
 
 
