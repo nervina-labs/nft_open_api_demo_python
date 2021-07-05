@@ -3,7 +3,6 @@ from unsigned_tx_generators import generate_new_transfer_tx
 if __name__ == '__main__':
     key = ''
     secret = ''
-    class_uuid = ''
     from_address = ''
     to_address = ''
     nft_type_args = ''
