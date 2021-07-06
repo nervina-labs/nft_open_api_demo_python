@@ -2,9 +2,17 @@ import json
 from utils.utils import send_request
 
 
-def get_token_classes_owned_by_user(key, secret):
+def get_user_owned_token_classes(key, secret, count=None, cursor=None):
     method = 'GET'
-    endpoint = '/token_classes'
+    if not (count or cursor):
+        endpoint = '/token_classes'
+    elif count and cursor:
+        endpoint = f'/token_classes?count={count}&cursor={cursor}'
+    elif count:
+        endpoint = f'/token_classes?count={count}'
+    else:
+        endpoint = f'/token_classes?cursor={cursor}'
+
     content = ''
     return send_request(key, secret, method, endpoint, content)
 
