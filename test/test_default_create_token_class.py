@@ -12,7 +12,6 @@ def test_create_unlimited_token_class():
     renderer = 'https://example.com'
     r = create_token_class(key, secret, name, description, total, renderer)
     assert r.status_code == 201
-    print(r.json())
 
 
 def test_create_limited_token_class():
@@ -22,7 +21,6 @@ def test_create_limited_token_class():
     renderer = 'https://example.com'
     r = create_token_class(key, secret, name, description, total, renderer)
     assert r.status_code == 201
-    print(r.json())
 
 
 def test_create_token_class_with_name_more_than_30_chars():
