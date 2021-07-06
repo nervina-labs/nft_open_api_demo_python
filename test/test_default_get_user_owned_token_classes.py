@@ -9,7 +9,6 @@ token_class_uuid = '4867853a-bceb-42a2-8105-c23cb77f9cba'
 def test_get_user_owned_token_classes():
     r = get_user_owned_token_classes(key, secret, count=100)
     assert r.status_code == 200
-    assert token_class_uuid in [i['uuid'] for i in r.json()['token_classes']]
 
 
 def test_get_user_owned_token_classes_with_count():
@@ -31,3 +30,4 @@ def test_get_user_owned_token_classes_with_cursor():
         total += count
         cursor = r.json()['meta']['next_cursor']
     assert total >= 47
+    assert token_class_uuid in [i['uuid'] for i in r.json()['token_classes']]

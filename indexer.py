@@ -1,9 +1,12 @@
-from utils import send_request
+from utils.utils import send_request
 
 
-def get_tokens_by_holder_address(key, secret, address):
+def get_tokens_by_holder_address(key, secret, address, page=None):
     method = 'GET'
-    endpoint = f'/indexer/holder_tokens/{address}'
+    if page:
+        endpoint = f'/indexer/holder_tokens/{address}?page={page}'
+    else:
+        endpoint = f'/indexer/holder_tokens/{address}'
     content = ''
     return send_request(key, secret, method, endpoint, content)
 
