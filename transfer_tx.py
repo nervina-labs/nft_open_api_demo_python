@@ -20,7 +20,7 @@ def send_signed_tx(key, secret):
 
 
 # tx uuid
-def get_transfer_tx_by_tx_uuid(key, secret, uuid):
+def get_tx_by_tx_uuid(key, secret, uuid):
     method = 'GET'
     endpoint = f'/tx/token_transfers/{uuid}'
     content = ''
