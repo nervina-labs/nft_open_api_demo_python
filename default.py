@@ -1,5 +1,5 @@
 import json
-from utils import send_request
+from utils.utils import send_request
 
 
 def get_token_classes_owned_by_user(key, secret):
@@ -10,7 +10,7 @@ def get_token_classes_owned_by_user(key, secret):
 
 
 # total = 0 as unlimited; total > 0 as limited
-def create_token_classes(key, secret, name, description, total, renderer):
+def create_token_class(key, secret, name, description, total, renderer):
     method = 'POST'
     endpoint = '/token_classes'
     content = {
