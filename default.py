@@ -30,7 +30,7 @@ def get_token_class_by_uuid(key, secret, uuid):
     return send_request(key, secret, method, endpoint, content)
 
 
-# token class uuid, and there is an error in the doc of request body
+# token class uuid
 def distribute_token(key, secret, uuid, *address):
     method = 'POST'
     endpoint = f'/token_classes/{uuid}/tokens'
