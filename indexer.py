@@ -11,8 +11,8 @@ def get_tokens_by_holder_address(key, secret, address, page=None):
     return send_request(key, secret, method, endpoint, content)
 
 
-def get_tokens_by_args(key, secret, args):
+def get_token_by_nft_type_args(key, secret, nft_type_args):
     method = 'GET'
-    endpoint = f'/indexer/tokens/{args}'
+    endpoint = f'/indexer/tokens/{nft_type_args}'
     content = ''
     return send_request(key, secret, method, endpoint, content)
