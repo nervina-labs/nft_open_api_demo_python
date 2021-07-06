@@ -1,11 +1,11 @@
-from utils import send_request
+from utils.utils import send_request
 
 
 # could be token_uuid or nft_type_args
-def generate_new_transfer_tx(key, secret, from_address, to_address, args=None, token_uuid=None):
+def generate_new_transfer_tx(key, secret, from_address, to_address, nft_type_args=None, token_uuid=None):
     method = 'GET'
-    if args:
-        endpoint = f'/tx/token_transfers/new?from_address={from_address}&to_address={to_address}&nft_type_args={args}'
+    if nft_type_args:
+        endpoint = f'/tx/token_transfers/new?from_address={from_address}&to_address={to_address}&nft_type_args={nft_type_args}'
     elif token_uuid:
         endpoint = f'/tx/token_transfers/new?from_address={from_address}&to_address={to_address}&token_uuid={token_uuid}'
     else:
