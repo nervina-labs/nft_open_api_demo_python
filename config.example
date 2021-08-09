@@ -1,0 +1,4 @@
+[default]
+url = https://api.internal.nervina.cn
+key = xxxxxxx
+secret = xxxxxxx

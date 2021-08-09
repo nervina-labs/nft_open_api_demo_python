@@ -49,8 +49,15 @@ def distribute_token(key, secret, uuid, *address):
 
 
 # token class uuid; and oid as token id
-def get_token(key, secret, uuid, oid):
+def get_token(key, secret, token_uuid):
     method = 'GET'
-    endpoint = f'/token_classes/{uuid}/tokens/{oid}'
+    endpoint = f'/tokens/{token_uuid}'
+    content = ''
+    return send_request(key, secret, method, endpoint, content)
+
+
+def get_holder_by_token_uuid(key, secret, token_uuid):
+    method = 'GET'
+    endpoint = f'/tokens/{token_uuid}/address'
     content = ''
     return send_request(key, secret, method, endpoint, content)

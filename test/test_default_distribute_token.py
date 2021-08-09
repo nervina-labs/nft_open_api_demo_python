@@ -1,69 +1,87 @@
+import pytest
 from utils.config import config
-from default import distribute_token
+from api.default import distribute_token
 
 key = config['default']['key']
 secret = config['default']['secret']
-token_class_uuid = '4867853a-bceb-42a2-8105-c23cb77f9cba'
-limited_class_uuid = '15fc9e0f-bfd2-465f-98e5-34e8179788fc'
-out_of_stock_class_uuid = '0a5683f5-559d-4e1b-9e4e-5fe35e71f103'
-address = 'ckt1q3vvtay34wndv9nckl8hah6fzzcltcqwcrx79apwp2a5lkd07fdxxqycw877rwy0uuwspsh9cteaf8kqp8nzjl0dxfp'
-another_address = 'ckt1q3vvtay34wndv9nckl8hah6fzzcltcqwcrx79apwp2a5lkd07fdx83pmv9wj80kf0w5zfym9am9eply253tuu8v5lsn'
+
+token_class_uuid = config['default']['token_class_uuid']
+address = config['default']['address']
 
 
-def test_distribute_token_to_single_address():
+def test_distribute_to_single_address():
     r = distribute_token(key, secret, token_class_uuid, address)
     assert r.status_code == 201
 
 
-def test_distribute_token_to_multi_addresses():
+@pytest.mark.test
+def test_distribute_to_multi_addresses():
     r = distribute_token(key, secret, token_class_uuid,
-                         address, another_address)
+                         *[address] * 1000)
+    print(r.json())
     assert r.status_code == 201
 
 
-def test_distribute_token_to_multi_same_addresses():
+def test_distribute_to_multi_same_addresses():
     r = distribute_token(key, secret, token_class_uuid, address, address)
     assert r.status_code == 201
 
 
-def test_distribute_token_to_empty_address():
+def test_distribute_without_address():
     r = distribute_token(key, secret, token_class_uuid)
     assert r.status_code == 400
     assert r.json()['code'] == 1017
     assert r.json()['message'] == 'the addresses is missing'
 
 
-def test_distribute_token_with_wrong_token_uuid():
-    r = distribute_token(key, secret, 'wrong_token_uuid', address)
+def test_distribute_with_invalid_token_class_uuid():
+    r = distribute_token(key, secret, 'invalid_token_class_uuid', address)
     assert r.status_code == 404
     assert r.json()['code'] == 1015
     assert r.json()['message'] == 'token class not found'
 
 
-def test_distribute_token_to_wrong_address():
-    r = distribute_token(key, secret, token_class_uuid, 'wrong_ckb_address')
+def test_distribute_not_owned_token_class():
+    not_owned_token_class_uuid = config['default']['not_owned_token_class_uuid']
+    r = distribute_token(key, secret, not_owned_token_class_uuid, address)
+    assert r.status_code == 404
+    assert r.json()['code'] == 1015
+    assert r.json()['message'] == 'token class not found'
+
+
+def test_distribute_to_invalid_address():
+    r = distribute_token(key, secret, token_class_uuid, 'invalid_ckb_address')
     assert r.status_code == 400
     assert r.json()['code'] == 1018
     assert r.json()['message'] == 'the address is invalid'
 
 
-def test_distribute_token_to_multi_addresses_with_one_invalid():
+def test_distribute_to_multi_addresses_with_one_invalid():
     r = distribute_token(key, secret, token_class_uuid,
-                         address, 'wrong_ckb_address')
+                         address, 'invalid_ckb_address')
     assert r.status_code == 400
     assert r.json()['code'] == 1018
     assert r.json()['message'] == 'the address is invalid'
 
 
-def test_distribute_token_out_of_limited():
-    r = distribute_token(key, secret, limited_class_uuid, address,
-                         address, address, address, address, address, address, address)
+def test_distribute_to_short_address():
+    short_address = config['default']['short_address']
+    r = distribute_token(key, secret, token_class_uuid, short_address)
+    assert r.status_code == 400
+    assert r.json()['code'] == 1022
+    assert r.json()['message'] == 'only support full address'
+
+
+def test_distribute_out_of_limited():
+    limited_class_uuid = config['default']['limited_token_class_uuid']
+    r = distribute_token(key, secret, limited_class_uuid, * [address] * 8)
     assert r.status_code == 400
     assert r.json()['code'] == 1021
     assert r.json()['message'] == 'exceed total'
 
 
-def test_distribute_out_of_stock_token():
+def test_distribute_out_of_stock():
+    out_of_stock_class_uuid = config['default']['out_of_stock_token_class_uuid']
     r = distribute_token(key, secret, out_of_stock_class_uuid, address)
     assert r.status_code == 400
     assert r.json()['code'] == 1021

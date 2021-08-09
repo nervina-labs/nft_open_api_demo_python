@@ -1,14 +1,15 @@
 from utils.config import config
-from transfer_tx import get_tx_by_tx_uuid
+from api.transfer_tx import get_tx_by_tx_uuid
 
 key = config['default']['key']
 secret = config['default']['secret']
-issue_tx_uuid = 'f68c78a2-4396-4559-ba47-16a52cadf5cf'
-transfer_tx_uuid = '37ae9eab-21fb-4a46-a4aa-5450f7931009'
+issue_tx_uuid = '1c77933c-4c33-4995-8755-9f18ac707668'
+transfer_tx_uuid = 'de84bde3-b745-4e1d-a8cf-f5e07e80d313'
 
 
 def test_get_issue_tx_by_tx_uuid():
     r = get_tx_by_tx_uuid(key, secret, issue_tx_uuid)
+    print(r.json())
     assert r.status_code == 200
     assert r.json()['tx_type'] == 'issue'
 
