@@ -18,7 +18,7 @@ def get_user_owned_token_classes(key, secret, count=None, cursor=None):
 
 
 # total = 0 as unlimited; total > 0 as limited
-def create_token_class(key, secret, name, description, total, renderer):
+def create_token_class(key, secret, name, description, total, renderer, configure=None):
     method = 'POST'
     endpoint = '/token_classes'
     content = {
@@ -27,6 +27,8 @@ def create_token_class(key, secret, name, description, total, renderer):
         'total': total,
         'renderer': renderer
     }
+    if configure:
+        content['configure'] = configure
     return send_request(key, secret, method, endpoint, json.dumps(content))
 
 

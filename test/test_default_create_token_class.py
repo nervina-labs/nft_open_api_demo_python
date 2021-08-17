@@ -16,16 +16,12 @@ total = '7'
 forbidden_content = '本校小额贷款，安全、快捷、方便、无抵押，随机随贷，当天放款'
 
 
-@pytest.mark.test
 def test_create_unlimited_token_class():
     name = 'Open API Unlimit Test'
     total = '0'
     valid_img_url = 'https://cdn.2zimu.com/mbd_file_16273832712481627383271244.png'
     r = create_token_class(
         key, secret, name, description, total, valid_img_url)
-    print(r.request.url)
-    print(r.request.headers)
-    print(r.request.body)
     assert r.status_code == 201
 
 
@@ -155,3 +151,21 @@ def test_create_token_class_with_empty_total():
     assert r.status_code == 400
     assert r.json()['code'] == 1010
     assert r.json()['message'] == 'the total is missing'
+
+
+def test_create_token_class_with_configure():
+    name = 'Configured Class'
+    configure = '00000000'
+    r = create_token_class(key, secret, name, description,
+                           total, valid_img_url, configure)
+    assert r.status_code == 201
+
+
+def test_create_token_class_with_incorrect_configure_format():
+    name = 'Incorrect format configure'
+    for configure in ['20000000', '0'*7, '0'*9, 10000000]:
+        r = create_token_class(key, secret, name, description,
+                               total, valid_img_url, configure)
+        assert r.status_code == 400
+        assert r.json()['code'] == 1099
+        assert r.json()['message'] == 'configure field format error'
