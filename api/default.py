@@ -1,4 +1,5 @@
 import json
+
 from utils.utils import send_request
 
 
@@ -18,7 +19,7 @@ def get_user_owned_token_classes(key, secret, count=None, cursor=None):
 
 
 # total = 0 as unlimited; total > 0 as limited
-def create_token_class(key, secret, name, description, total, renderer, configure=None):
+def create_token_class(key, secret, name, description, total, renderer, cover_image_url=None, configure=None):
     method = 'POST'
     endpoint = '/token_classes'
     content = {
@@ -27,6 +28,8 @@ def create_token_class(key, secret, name, description, total, renderer, configur
         'total': total,
         'renderer': renderer
     }
+    if cover_image_url:
+        content['cover_image_url'] = cover_image_url
     if configure:
         content['configure'] = configure
     return send_request(key, secret, method, endpoint, json.dumps(content))

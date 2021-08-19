@@ -10,6 +10,8 @@ invalid_img_url_with_incorrect_prefix = 'http://alifei02.cfp.cn/creative/VCG41N1
 invalid_img_url_with_incorrect_suffix = 'https://example.com'
 invalid_img_url_with_forbidden_content = 'https://5b0988e595225.cdn.sohucs.com/images/20171128/eae4d64998924156950f9385999149ed.jpeg'
 
+video_url = 'https://oss.jinse.cc/production/583b109e-1fc3-42bd-937f-f4935ae80167.mp4'
+
 description = 'Open API Test Description'
 total = '7'
 
@@ -169,3 +171,19 @@ def test_create_token_class_with_incorrect_configure_format():
         assert r.status_code == 400
         assert r.json()['code'] == 1099
         assert r.json()['message'] == 'configure field format error'
+
+
+def test_create_video_token_class():
+    name = 'Video NFT'
+    r = create_token_class(key, secret, name, description,
+                           total, video_url, cover_image_url=valid_img_url)
+    assert r.status_code == 201
+
+
+def test_create_video_without_cover_image():
+    name = 'Video without cover image'
+    r = create_token_class(key, secret, name, description, total, video_url)
+    assert r.status_code == 400
+    assert r.json()['code'] == 1082
+    assert r.json()[
+        'message'] == 'cover_image_url shouldn\'t be nil when renderer was not a image'
