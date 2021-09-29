@@ -15,13 +15,14 @@ def bytes_to_str(bytes):
     return bytes.decode('utf-8')
 
 
-def get_signature_and_gmt(secret, method, endpoint, content, content_type='application/json'):
+def get_signature_and_gmt(secret, method, endpoint, content, content_type='application/json', gmt=''):
     if content:
         content_md5 = bytes_to_str(base64.b64encode(
             hashlib.md5(str_to_bytes(content)).digest()))
     else:
         content_md5 = ''
-    gmt = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
+    if not gmt:
+        gmt = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
     msg = str_to_bytes(
         f'{method}\n{endpoint}\n{content_md5}\n{content_type}\n{gmt}')
 
